@@ -1,0 +1,111 @@
+23B0999
+Yuvraj Gupta
+
+This is a low effort report for Week 1. 
+I like this more than google docs or latex or Microsoft word because I don't want to get too stuck up upon formatting and how good it looks
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+1. Greedy or Not. 	
+
+First I was trying to think is there a sure short way or analytical way to strategize this game but in vain because if the players are playing optimally 
+there must be a strategy. 
+Realised that the players are just computers and are playing by considering every possible in the future and hence playing optimally. 
+First implemented a recursive code in python to check whether logic is good enough. 
+Proceeded to do it by Dynamic programming where (N choose 2 ways + N) where you can select a subarray from the main array (hence O(n^2) ). 
+One mistake I was doing at the start was, I was repeatedly calling the ```sum(subarray)``` function in every loop which made my code not O(n^2).
+Then while taking inputs made a ```Prefix Sum``` list (where it is the sum from the start till that position so 1,1+2,1+2+3... ) to just call values from that.
+I proceeded to submit it on the cses.fi question which passed. 
+Also I (ChatGPT) made an Auto-Grader for it which isn't working for big inputs (worked till 400) (god knows why).
+Also surprisingly my code passed testcase 0-9 but not tc10 which is baffles me till now. 
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+2. Chomp
+
+After furiously playing this game for 2 hours and ruining the rest of my day, I realised that the UCLA website doesn't play optimally. I was building up
+strategies (thinking I can figure out a strategy) based on that but whoops. I also found a website which lets you change the grid size, 
+whether or not you are player 1, and gives you the best move too. 
+
+
+
+Question 1: Does there always exist a sequence of moves such that the player making the first move wins?
+
+Answer: We can confirm the existence of the sequence of moves, because if the second player has a winning strategy, whatever move
+	the first player played in his/her/their/labadabadoo move, the second player should be able to play a move to counter it. 
+	But if the first player takes just the top-right corner then whatever move is according to the alleged winning strategy of the second player, 
+	the first player could have played that and look look the turn tables. So now the first player can replicate whatever the game was going 
+	to be and wins.
+
+
+Question 2: Given a Chomp position, is there a way to determine whether it is possible to win for any player with perfect play? Can you deduce it?
+
+Answer: You can say this easily if you get similar positions like a square or a 2xn or just a smaller full grid. If you think of in the similar ways 
+	of the first question that if both the players play optimally, and in the last 2 moves before a certain chomp position, then if the second player
+	plays a move and reaches a position that the first player could have reached by its first move, then the first player is winning/will win for sure. 	Since both the players play optimally, lets say that after the 2 moves the second player is winning so therefore that is a winning position
+	and if it is a winning position, and first player could have originally achieved it then since it plays optimally it will make that move and 
+	the second player cannot be in a winning position if that happens. 
+
+
+Note: Another question I got stuck on is if both the players are playing "optimally" and the first player has a winning strategy, then how is any 
+      sequence of moves played by player 2 any less optimal than the other because they are all leading to the same result. You can always delay the  
+      loss and you can gauge the optimality of a sequence of moves on "I don't lose for at least k more moves." 
+
+
+Note: The 3xn case was solved in 2002 by a high school senior, Steven Byrnes of Lexington, MA, as part of a larger theorem. He won the Siemens-
+      Westinghouse Competition in Math, Science and Technology.
+
+
+
+Question 3: If a sequence of move which guarantees a win does exist for a Chomp position, can you determine the sequence of moves?
+
+Answer: Working on the fixed board couldn't help me get any strategies but some things I figured out was, don't reach a L position since you lose then. 
+	Looking up for winning strategies I found the strategies for the square and nxn positions
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+3. Nim
+
+I feel doing Chomp before Nim wasn't the intention of the mentor but well I did do it. I was pretty much blank on this game and couldn't feel like
+I was making any kind of progress no matter how long i play it. When I looked up on this game i realised if played optimally player 2 wins and 
+I had the pre conceived notion that first player wins(because i did chomp before this) and i kept playing as the first player. Another difficulty 
+that did come up was for some reason a lot of the interfaces had the 1-3-5-7 game as default and i was not able to change it. So I wasn't able to think 
+of any general solution yet, I was getting an intuition somewhere that moves are being somewhat copied. like if I remove just one stick, computer 
+removes just one too but couldn't materialse it. I then looked up for the solution and did then get it. I also got to know 2 versions of the game normal
+and a misère game where normal says picking the last stick gives you a win and misere game is the last stick gives you a loss. This one is the misère version. For this you have to keep a zero nim sum till you find a winning position. The strategy changes at the end for the misere game or the normal game. 
+At the end you have to give your opponent odd number of single stick stacks. 
+
+Question 1: Does there always exist a sequence of moves such that the player making the first move wins?
+
+Answer: No
+
+
+Question 2: Given a Nim position, is there a way to determine whether it is possible to win for any player with perfect play? If not, why? If yes, how
+
+Answer: Since the game doesn't have draws either of the player is going to win. And unless it is some specific positions, 
+	if you can create a 0 nim sum you will win.
+
+
+Question 3: If a sequence of move which guarantees a win does exist for a Nim position, how will you determine the sequence of moves? 
+	    That is to say, how is the computer coded to play the most optimum way?
+
+Answer: The optimal play is to play according to what your opponent plays and keep a zero nim sum game and recognise a winning position and go further. 
+
+
+Note: Obviously some obvious ways that player 1 wins is:
+	one heap
+	two heaps, | |
+	even number of single stick heaps
+	and more
+
+So excluding these cases we can say that second player will win 
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+
+4. Pawnscape
+
+I personally felt this to be the most challenging one of the 4 games, and I was not able to give much time to this either (some other unfortunate commitments) 
+Few things I realised was, it is difficult to win unless the opponent is stupid and 
+
+
+
