@@ -1,0 +1,26 @@
+Thu Jun 27 16:39:57 2024    profile_data.prof
+
+         600796827 function calls (600359354 primitive calls) in 206.421 seconds
+
+   Ordered by: cumulative time
+   List reduced from 983 to 16 due to restriction <'engine.py'>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.002    0.002  208.023  208.023 checktheengine.py:1(<module>)
+436680/20    1.782    0.000  207.897   10.395 engine.py:226(alpha_beta_pruning)
+   928903    0.473    0.000   73.997    0.000 engine.py:171(get_board_str)
+    49430    2.555    0.000   55.642    0.001 engine.py:107(get_valid_actions)
+   384798    0.566    0.000   31.670    0.000 engine.py:176(StaticValue)
+   384798   16.009    0.000   30.899    0.000 engine.py:188(PieceDifference)
+   442793    0.702    0.000   30.618    0.000 engine.py:160(update_history)
+   436680    0.239    0.000   13.849    0.000 engine.py:136(is_terminal_history)
+   436680    0.371    0.000   10.647    0.000 engine.py:94(is_draw)
+   876678    0.437    0.000    5.392    0.000 engine.py:83(is_win)
+  1261476    0.277    0.000    0.277    0.000 engine.py:59(current_player)
+     2452    0.003    0.000    0.115    0.000 engine.py:149(get_utility_given_terminal_history)
+   384798    0.106    0.000    0.106    0.000 engine.py:18(sgn)
+   442813    0.104    0.000    0.104    0.000 engine.py:29(__init__)
+        1    0.000    0.000    0.089    0.089 engine.py:1(<module>)
+        1    0.000    0.000    0.000    0.000 engine.py:28(Chess_Board)
+
+
