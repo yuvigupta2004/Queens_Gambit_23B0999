@@ -78,6 +78,7 @@ class Chess_Board:
                 valid_actions.insert(0,sanmove)
             else:
                 valid_actions.append(sanmove)
+        # return standard_notation_moves
         return valid_actions
   
 
@@ -111,50 +112,42 @@ class Chess_Board:
     
     
     def get_board_str(self):
-        return self.board.fen()
+        return str(self.board)
     
     def StaticValue(self):
         
-        board=self.board
+        
         value=0
         piecediff=self.PieceDifference()
         value=value+(sgn(piecediff))*(2**abs(piecediff))
         
-        return self.PieceDifference()
+        return value
     
     def PieceDifference(self):
         PIECE_VALUES = {
-        chess.PAWN: 1,
-        chess.KNIGHT: 3,
-        chess.BISHOP: 3.2,
-        chess.ROOK: 5,
-        chess.QUEEN: 9
+        "p": 1,
+        "n": 3,
+        "b": 3.2,
+        "r": 5,
+        "q": 9
         }
         board=self.board
-        white_score = 0
-        black_score = 0
+        # piece_map = board.piece_map()
     
-        # Iterate through all squares on the board
-        for square in chess.SQUARES:
+        white_points = 0
+        black_points = 0
+    
+        for i in board.fen().split()[0]:
             
-            rownumber=1+int(square/8)
-            columnnumber=1+square%8
-            # squareutility=1.5**((8-abs(rownumber-4.5)-abs(columnnumber-4.5))/200)
+            value =  PIECE_VALUES.get(i.lower(), 0)
             
-            piece = board.piece_at(square)
-            if piece:
-                value = PIECE_VALUES.get(piece.piece_type, 0)
-                if piece.color == chess.WHITE:
-                    white_score += value
-                else:
-                    black_score += value
+            if i.isupper():
+                white_points += value
+            else:
+                black_points += value
         
+        return round(white_points - black_points,5)
         
-        ans=round(white_score-black_score,5)
-        # print(white_score)
-        # print(black_score)
-        
-        return ans
         
     
     
@@ -162,14 +155,14 @@ temp = 1000
 
 def alpha_beta_pruning(history_obj, alpha, beta, depth, max_player_flag,board_positions_val_dict):
     
-    boardstr=history_obj.get_board_str()
+    # boardstr=history_obj.get_board_str()
     
     if history_obj.is_terminal_history():
         return history_obj.get_utility_given_terminal_history(), None
     if depth==0:
         return history_obj.StaticValue(), None 
-    if boardstr in board_positions_val_dict:
-        return board_positions_val_dict[boardstr]
+    # if boardstr in board_positions_val_dict:
+    #     return board_positions_val_dict[boardstr]
         
     bestmove=""   
     
@@ -177,11 +170,11 @@ def alpha_beta_pruning(history_obj, alpha, beta, depth, max_player_flag,board_po
         maxEval = -math.inf
         for action in history_obj.get_valid_actions():    
             child=history_obj.update_history(action)
-            childstr=child.get_board_str()  
+            # childstr=child.get_board_str()  
             
-            if childstr in board_positions_val_dict:
-                eval,abcd = board_positions_val_dict[childstr]  
-            else:
+            # if childstr in board_positions_val_dict:
+            #     eval,abcd = board_positions_val_dict[childstr]  
+            if True:
                 if ((str(action)[1] == 'x')):
                     eval,abcd = alpha_beta_pruning(child,alpha,beta,depth-1,False,board_positions_val_dict)
                 else:
@@ -195,18 +188,18 @@ def alpha_beta_pruning(history_obj, alpha, beta, depth, max_player_flag,board_po
             if beta <= alpha:
                 break
             
-        board_positions_val_dict[boardstr]=maxEval,bestmove
+        # board_positions_val_dict[boardstr]=maxEval,bestmove
         return maxEval,bestmove
     
     else:
         minEval = math.inf
         for action in history_obj.get_valid_actions():
             child=history_obj.update_history(action)
-            childstr=child.get_board_str()
+            # childstr=child.get_board_str()
             
-            if childstr in board_positions_val_dict:
-                eval,abcd = board_positions_val_dict[childstr]
-            else:    
+            # if childstr in board_positions_val_dict:
+            #     eval,abcd = board_positions_val_dict[childstr]
+            if True:    
                 if ((str(action)[1] == 'x')) :
                     eval,abcd = alpha_beta_pruning(child,alpha,beta,depth-1,True,board_positions_val_dict)
                 else:
@@ -221,7 +214,7 @@ def alpha_beta_pruning(history_obj, alpha, beta, depth, max_player_flag,board_po
             beta = min(beta,eval)
             if beta <= alpha:
                 break
-        board_positions_val_dict[boardstr]=minEval,bestmove
+        # board_positions_val_dict[boardstr]=minEval,bestmove
         return minEval,bestmove
         
     
