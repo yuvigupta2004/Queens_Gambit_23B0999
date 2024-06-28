@@ -1,20 +1,10 @@
-import copy  # use it for deepcopy if needed
 import math
 import logging
 import chess
-# import time
-
 logging.basicConfig(format='%(levelname)s - %(asctime)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S',
                     level=logging.INFO)
 
-# Global variable to keep track of visited board positions. This is a dictionary with keys as self.boards as str and
-# value represents the maxmin value. Use the get_boards_str function in History class to get the key corresponding to
-# self.boards.
 
-# Global variable to store the visited histories in the process of alpha beta pruning.
-visited_histories_list = []
-
-help=0
 def sgn(x):
     if x > 0:
         return 1
@@ -50,36 +40,58 @@ class Chess_Board:
         if board.is_checkmate():
             return 3-currentplayer
         return False
-        pass
+    
 
     def is_draw(self):
         board=self.board
-        if board.is_insufficient_material():
-            return True
         if board.is_stalemate():
             return True
+        if board.is_insufficient_material():
+            return True
         return False
-        # Feel free to implement this in anyway if needed
-        pass
+        
 
     def get_valid_actions(self):
+        
         board=self.board
-        valid_actions=[]
-        goodmoves=set(["+","Q"])
-        legal_moves= board.legal_moves
-        standard_notation_moves = [board.san(move) for move in legal_moves]
-        for sanmove in standard_notation_moves:
-            movestr_final=str(sanmove)[-1]
-            if movestr_final == '#':
+        good_moves = []
+        capture_moves = []
+        other_moves = []
+
+        for move in board.legal_moves:
+            sanmove = board.san(move)
+            if sanmove[-1]=='#':
                 return [sanmove]
-            if movestr_final in goodmoves:
-                valid_actions.insert(0,sanmove)
-            elif str(sanmove)[1] == 'x':
-                valid_actions.insert(0,sanmove)
+            if sanmove[-1] in {'+', 'Q'}:
+                good_moves.append(sanmove)
+            elif sanmove[1] == 'x':
+                capture_moves.append(sanmove)
             else:
-                valid_actions.append(sanmove)
-        # return standard_notation_moves
+                other_moves.append(sanmove)
+    
+        # Combine all the categorized moves
+        valid_actions = good_moves + capture_moves + other_moves
         return valid_actions
+            
+        
+        # board=self.board
+        # valid_actions=[]
+        # goodmoves=set(["+","Q"])
+        # # legal_moves= board.legal_moves
+        # # standard_notation_moves = [board.san(move) for move in legal_moves]
+        # for move in board.legal_moves:
+        #     sanmove=board.san(move)
+        #     movestr_final=str(sanmove)[-1]
+        #     if movestr_final == '#':
+        #         return [sanmove]
+        #     if movestr_final in goodmoves:
+        #         valid_actions.insert(0,sanmove)
+        #     elif str(sanmove)[1] == 'x':
+        #         valid_actions.insert(0,sanmove)
+        #     else:
+        #         valid_actions.append(sanmove)
+        
+        # return valid_actions
   
 
     def is_terminal_history(self):
@@ -151,9 +163,9 @@ class Chess_Board:
         
     
     
-temp = 1000
 
-def alpha_beta_pruning(history_obj, alpha, beta, depth, max_player_flag,board_positions_val_dict):
+
+def alpha_beta_pruning(history_obj, alpha, beta, depth, max_player_flag):
     
     # boardstr=history_obj.get_board_str()
     
@@ -176,9 +188,9 @@ def alpha_beta_pruning(history_obj, alpha, beta, depth, max_player_flag,board_po
             #     eval,abcd = board_positions_val_dict[childstr]  
             if True:
                 if ((str(action)[1] == 'x')):
-                    eval,abcd = alpha_beta_pruning(child,alpha,beta,depth-1,False,board_positions_val_dict)
+                    eval,abcd = alpha_beta_pruning(child,alpha,beta,depth-1,False)
                 else:
-                    eval,abcd = alpha_beta_pruning(child,alpha,beta,depth-1,False,board_positions_val_dict)
+                    eval,abcd = alpha_beta_pruning(child,alpha,beta,depth-1,False)
                        
             if eval > maxEval:
                 bestmove=str(action)            
@@ -201,9 +213,9 @@ def alpha_beta_pruning(history_obj, alpha, beta, depth, max_player_flag,board_po
             #     eval,abcd = board_positions_val_dict[childstr]
             if True:    
                 if ((str(action)[1] == 'x')) :
-                    eval,abcd = alpha_beta_pruning(child,alpha,beta,depth-1,True,board_positions_val_dict)
+                    eval,abcd = alpha_beta_pruning(child,alpha,beta,depth-1,True)
                 else:
-                    eval,abcd = alpha_beta_pruning(child,alpha,beta,depth-1,True,board_positions_val_dict)
+                    eval,abcd = alpha_beta_pruning(child,alpha,beta,depth-1,True)
                     
 
             if eval < minEval:
@@ -227,8 +239,8 @@ def alpha_beta_pruning(history_obj, alpha, beta, depth, max_player_flag,board_po
 
 def solve_alpha_beta_pruning(history_obj, alpha, beta, depth, max_player_flag):
     global visited_histories_list
-    board_positions_val_dict={}
-    val,bestmove = alpha_beta_pruning(history_obj, alpha, beta, depth, max_player_flag,board_positions_val_dict)
+    # board_positions_val_dict={}
+    val,bestmove = alpha_beta_pruning(history_obj, alpha, beta, depth, max_player_flag)
     return val, visited_histories_list, bestmove
 
 

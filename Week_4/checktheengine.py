@@ -6,13 +6,15 @@ import logging
 import json
 from tqdm import tqdm
 
-import cProfile
-import re
+
+# import cProfile
+# import re
 
 with open('mate_in_2.json', 'r') as file:
     puzzles = json.load(file)
 
 # logging.basicConfig(format='%(levelname)s - %(asctime)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S', level=logging.INFO)
+
 
 
 # Global variable to store the visited histories in the process of alpha beta pruning.
@@ -56,7 +58,7 @@ for puzzle in tqdm(puzzles):
     
     
     chessboard=Chess_Board(board)
-    fen_fields = str(board.fen()).split()
+    fen_fields = puzzle.split()
     active_color = fen_fields[1]
     
     if active_color=='w':
@@ -66,10 +68,10 @@ for puzzle in tqdm(puzzles):
         
     
     
-    board_positions_val_dict = {}
+    # board_positions_val_dict = {}
     # print(chessboard.board)
 
-    eval,bestmove = alpha_beta_pruning(chessboard,-math.inf,math.inf,3,maxflag,board_positions_val_dict)   
+    eval,bestmove = alpha_beta_pruning(chessboard,-math.inf,math.inf,3,maxflag)   
  
     
     
