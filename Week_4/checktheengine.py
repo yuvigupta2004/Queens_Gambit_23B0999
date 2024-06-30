@@ -36,15 +36,35 @@ import numpy as np
 # print(board.get_board_str())
 # logging.info("Start Solving")
 
+mateinwhat=int(input("Check mate in what:"))
 
 
-with open('mate_in_3.json', 'r') as file:
+if mateinwhat==2:
+    size=221
+    depth=3
+elif mateinwhat==3:
+    size=489
+    depth=5
+else:
+    quit()
+
+
+isprofilingon=int(input("is profiling on:"))
+boolcheck=[0,1]
+if isprofilingon not in boolcheck:
+    quit()
+
+
+
+
+
+with open('mate_in_{}.json'.format(mateinwhat), 'r') as file:
     puzzles = json.load(file)
 
 
 total=0
 correct=0
-data=np.zeros(shape=489)
+data=np.zeros(shape=size)
 logging.info("Start")
 start=time.time()
 for i,puzzle in enumerate(iterable=tqdm(puzzles)):
@@ -79,7 +99,7 @@ for i,puzzle in enumerate(iterable=tqdm(puzzles)):
     # board_positions_val_dict = {}
     # print(chessboard.board)
 
-    eval,bestmove = alpha_beta_pruning(board,-1*10**3,10**3,5,maxflag)   
+    eval,bestmove = alpha_beta_pruning(board,-1*10**3,10**3,depth,maxflag)   
  
     
     data[i]=time.time() - start_
@@ -102,6 +122,9 @@ print("Total time:",time.time()-start)
 logging.info("Total: {} | Correct: {}".format(total,correct))
 
 # cProfile.run('re.compile("foo|bar")')   
-plt.plot(np.arange(489),data)
-plt.savefig('pngfiles/matein3_returns0.png')
+plt.plot(np.arange(size),data)
+if isprofilingon:
+    plt.savefig('pngfiles/matein{}_returns0_withprofiling.png'.format(mateinwhat))
+else:
+    plt.savefig('pngfiles/matein{}_returns0.png'.format(mateinwhat))
 # logging.info("End")

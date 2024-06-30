@@ -1,0 +1,19 @@
+Sun Jun 30 19:44:32 2024    /home/yuvigupta/Queens_Gambit/Week_4/profiling/profile_data.prof
+
+         7440743 function calls (7406391 primitive calls) in 5.181 seconds
+
+   Ordered by: cumulative time
+   List reduced from 4094 to 9 due to restriction <'ihatebajaj.py'>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+17933/221    0.031    0.000    2.379    0.011 ihatebajaj.py:172(alpha_beta_pruning)
+     2169    0.033    0.000    1.231    0.001 ihatebajaj.py:43(get_valid_actions)
+    17712    0.010    0.000    0.720    0.000 ihatebajaj.py:124(update_history)
+    17933    0.008    0.000    0.372    0.000 ihatebajaj.py:106(is_terminal_history)
+    17933    0.009    0.000    0.244    0.000 ihatebajaj.py:35(is_draw)
+        1    0.000    0.000    0.179    0.179 ihatebajaj.py:1(<module>)
+    18544    0.008    0.000    0.140    0.000 ihatebajaj.py:27(is_win)
+      611    0.000    0.000    0.021    0.000 ihatebajaj.py:114(get_utility_given_terminal_history)
+    18544    0.004    0.000    0.004    0.000 ihatebajaj.py:18(current_player)
+
+
