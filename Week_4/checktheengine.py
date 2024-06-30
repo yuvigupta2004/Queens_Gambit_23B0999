@@ -1,17 +1,17 @@
-from engine import alpha_beta_pruning
-from engine import Chess_Board
+from ihatebajaj import alpha_beta_pruning
+# from engine import Chess_Board
 import chess
 import math
 import logging
 import json
 from tqdm import tqdm
-
+import matplotlib.pyplot as plt
+import time
+import numpy as np
 
 # import cProfile
 # import re
 
-with open('mate_in_2.json', 'r') as file:
-    puzzles = json.load(file)
 
 # logging.basicConfig(format='%(levelname)s - %(asctime)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S', level=logging.INFO)
 
@@ -35,11 +35,19 @@ with open('mate_in_2.json', 'r') as file:
 
 # print(board.get_board_str())
 # logging.info("Start Solving")
+
+
+
+with open('mate_in_3.json', 'r') as file:
+    puzzles = json.load(file)
+
+
 total=0
 correct=0
-
+data=np.zeros(shape=489)
 logging.info("Start")
-for puzzle in tqdm(puzzles):
+start=time.time()
+for i,puzzle in enumerate(iterable=tqdm(puzzles)):
     # if total==0:
     #     total=1
     #     continue
@@ -47,7 +55,7 @@ for puzzle in tqdm(puzzles):
     #     break
     # print(puzzle)
     # print("----------")
-    
+    start_=time.time()
     total+=1
     # logging.info("solving puzzle no: {}".format(total))
     
@@ -57,7 +65,7 @@ for puzzle in tqdm(puzzles):
     board=chess.Board(puzzle)
     
     
-    chessboard=Chess_Board(board)
+    # chessboard=Chess_Board(board)
     fen_fields = puzzle.split()
     active_color = fen_fields[1]
     
@@ -71,10 +79,10 @@ for puzzle in tqdm(puzzles):
     # board_positions_val_dict = {}
     # print(chessboard.board)
 
-    eval,bestmove = alpha_beta_pruning(chessboard,-math.inf,math.inf,3,maxflag)   
+    eval,bestmove = alpha_beta_pruning(board,-1*10**3,10**3,5,maxflag)   
  
     
-    
+    data[i]=time.time() - start_
        
     if bestmove!=movelist[1]:
         if (eval!=10**5):
@@ -89,7 +97,11 @@ for puzzle in tqdm(puzzles):
         correct+=1
    
     
+    
+print("Total time:",time.time()-start)
 logging.info("Total: {} | Correct: {}".format(total,correct))
-# cProfile.run('re.compile("foo|bar")')   
 
+# cProfile.run('re.compile("foo|bar")')   
+plt.plot(np.arange(489),data)
+plt.savefig('pngfiles/matein3_returns0.png')
 # logging.info("End")

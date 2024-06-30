@@ -1,6 +1,7 @@
 import math
 import logging
 import chess
+import numpy as np
 logging.basicConfig(format='%(levelname)s - %(asctime)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S',
                     level=logging.INFO)
 
@@ -41,11 +42,12 @@ def is_draw(board):
 
 def get_valid_actions(board):
     
-    
     good_moves = []
     capture_moves = []
     other_moves = []
-
+    
+    
+    
     for move in board.legal_moves:
         sanmove = board.san(move)
         if sanmove[-1]=='#':
@@ -63,22 +65,41 @@ def get_valid_actions(board):
     
     
     
-    # valid_actions=[]
-    # goodmoves=set{"+","Q"}
     
-    # for move in board.legal_moves:
+    # legal_moves=board.legal_moves
+    # move_value_dict={}
+    
+    # for move in legal_moves: 
+    #     board.push(move)
     #     sanmove=board.san(move)
-    #     movestr_final=str(sanmove)[-1]
-    #     if movestr_final == '#':
+    #     if board.is_checkmate():
+    #         board.pop()
     #         return [sanmove]
-    #     if movestr_final in goodmoves:
-    #         valid_actions.insert(0,sanmove)
-    #     elif str(sanmove)[1] == 'x':
-    #         valid_actions.insert(0,sanmove)
-    #     else:
-    #         valid_actions.append(sanmove)
+    #     move_value_dict[sanmove]=len(list(board.legal_moves))
+    #     if board.is_check():
+    #         move_value_dict[sanmove] = -10*3
+    #     board.pop()
+    # return sorted(move_value_dict, key=lambda x: move_value_dict[x])
     
-    # return valid_actions
+    # legal_moves=board.legal_moves
+    # move_value_dict={}
+    # standard_notation_moves = [board.san(move) for move in legal_moves]
+    # for sanmove in standard_notation_moves: 
+    #     board.push_san(sanmove)
+    #     if board.is_checkmate():
+    #         board.pop()
+    #         return [sanmove]
+    #     move_value_dict[sanmove]=len(list(board.legal_moves))
+    #     if board.is_check():
+    #         move_value_dict[sanmove] = -10*3
+    #     board.pop()
+    # return sorted(move_value_dict, key=lambda x: move_value_dict[x])
+    
+    
+    
+    
+    
+    
     
 
 
@@ -150,12 +171,12 @@ def PieceDifference(board):
 
 def alpha_beta_pruning(history_obj, alpha, beta, depth, max_player_flag):
     
-    # boardstr=history_obj.get_board_str()
+    # boardstr=history_obj.fen().split()[0] 
     
     if is_terminal_history(history_obj):
         return get_utility_given_terminal_history(history_obj), None
     if depth==0:
-        return StaticValue(history_obj), None 
+        return 0, None 
     
     # if boardstr in board_positions_val_dict:
     #     return board_positions_val_dict[boardstr]
@@ -166,15 +187,17 @@ def alpha_beta_pruning(history_obj, alpha, beta, depth, max_player_flag):
         maxEval = -math.inf
         for action in get_valid_actions(history_obj):    
             child=update_history(history_obj,action)
-            # childstr=child.get_board_str()  
+            
+            
+            # childstr=child.fen().split()[0] 
             
             # if childstr in board_positions_val_dict:
             #     eval,abcd = board_positions_val_dict[childstr]  
-            # if True:
+            # else:
             #     if ((str(action)[1] == 'x')):
-            #         eval,abcd = alpha_beta_pruning(child,alpha,beta,depth-1,False)
+            #         eval,abcd = alpha_beta_pruning(child,alpha,beta,depth-1,False,board_positions_val_dict)
             #     else:
-            #         eval,abcd = alpha_beta_pruning(child,alpha,beta,depth-1,False)
+            #         eval,abcd = alpha_beta_pruning(child,alpha,beta,depth-1,False,board_positions_val_dict)
             
             eval,abcd = alpha_beta_pruning(child,alpha,beta,depth-1,False)
                        
@@ -194,15 +217,16 @@ def alpha_beta_pruning(history_obj, alpha, beta, depth, max_player_flag):
         minEval = math.inf
         for action in get_valid_actions(history_obj):
             child=update_history(history_obj,action)
-            # childstr=child.get_board_str()
+            
+            # childstr=child.fen().split()[0] 
             
             # if childstr in board_positions_val_dict:
             #     eval,abcd = board_positions_val_dict[childstr]
-            # if True:    
+            # else:    
             #     if ((str(action)[1] == 'x')) :
-            #         eval,abcd = alpha_beta_pruning(child,alpha,beta,depth-1,True)
+            #         eval,abcd = alpha_beta_pruning(child,alpha,beta,depth-1,True,board_positions_val_dict)
             #     else:
-            #         eval,abcd = alpha_beta_pruning(child,alpha,beta,depth-1,True)
+            #         eval,abcd = alpha_beta_pruning(child,alpha,beta,depth-1,True,board_positions_val_dict)
             
             eval,abcd = alpha_beta_pruning(child,alpha,beta,depth-1,True)
 
@@ -225,50 +249,5 @@ def alpha_beta_pruning(history_obj, alpha, beta, depth, max_player_flag):
 
 
 
-def solve_alpha_beta_pruning(history_obj, alpha, beta, depth, max_player_flag):
-    global visited_histories_list
-    # board_positions_val_dict={}
-    val,bestmove = alpha_beta_pruning(history_obj, alpha, beta, depth, max_player_flag)
-    return val, visited_histories_list, bestmove
 
 
-if __name__ == "__main__":
-    # tscno=input("Enter Testcase Number: ")
-    for tscno in range(10):
-        
-        tscno=str(tscno)
-        tscno=tscno+".txt"
-        
-        with open(tscno,"r") as f:
-            fen=f.read()
-        # Create a new board object
-        matein3 = chess.Board()
-        # Set the board to the position defined by the FEN string
-        matein3.set_fen(fen)
-        # print(matein3)
-        fen_fields = fen.split()
-        active_color = fen_fields[1]
-        if active_color=='w':
-            maxflag=True
-        else:
-            maxflag=False
-        # print(maxflag)
-        # logging.info("start")
-        # logging.info("alpha beta pruning")
-        # print(Chess_Board(board=matein3).current_player())
-        
-        value, visited_histories, bestmove = solve_alpha_beta_pruning(Chess_Board(board=matein3), -math.inf, math.inf, 6, maxflag)
-        
-        print(maxflag, value, bestmove)
-        # if (2*int(maxflag)-1)*int(value) == 1000 :
-        #     print("Testcase {} Passed".format(tscno))
-            
-        # else:
-        #     print("Testcase {} Failed".format(tscno))
-        # print("maxmin value {}".format(value))
-        
-
-    # logging.info("Number of histories visited {}".format(len(visited_histories)))
-    # # logging.info("maxmin memory")
-    # # logging.info("maxmin value {}".format(maxmin(History(history=[], num_boards=2), True)))
-    # logging.info("end")
