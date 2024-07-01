@@ -1,4 +1,3 @@
  #!/bin/bash
 
- python3 checktheengine.py
- 
+ python3 checktheengine.py 0

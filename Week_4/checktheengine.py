@@ -8,6 +8,7 @@ from tqdm import tqdm
 import matplotlib.pyplot as plt
 import time
 import numpy as np
+import sys
 
 # import cProfile
 # import re
@@ -40,16 +41,19 @@ mateinwhat=int(input("Check mate in what:"))
 
 
 if mateinwhat==2:
-    size=221
+    size=351
     depth=3
 elif mateinwhat==3:
     size=489
     depth=5
+elif mateinwhat==4:
+    size=462
+    depth=7
 else:
     quit()
 
 
-isprofilingon=int(input("is profiling on:"))
+isprofilingon=int(sys.argv[1])
 boolcheck=[0,1]
 if isprofilingon not in boolcheck:
     quit()
@@ -104,19 +108,14 @@ for i,puzzle in enumerate(iterable=tqdm(puzzles)):
     
     data[i]=time.time() - start_
        
-    if bestmove!=movelist[1]:
-        if (eval!=10**5):
-            print(eval)
-            print(puzzle)
-            print(bestmove)
-            print(movelist[1])
-        else: 
-            correct+=1
     
-    else:
+    if (abs(eval)!=10**5):
+        print(eval)
+        print(puzzle)
+        print(bestmove)
+        print(movelist[1])
+    else: 
         correct+=1
-   
-    
     
 print("Total time:",time.time()-start)
 logging.info("Total: {} | Correct: {}".format(total,correct))

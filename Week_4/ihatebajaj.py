@@ -137,7 +137,7 @@ def get_board_str(board):
 def StaticValue(board):
 
     value=0
-    piecediff=PieceDifference(board)
+    piecediff=PieceDifference(board)/100
     value=value+(sgn(piecediff))*(2**abs(piecediff))
     return value
 
