@@ -103,7 +103,7 @@ for i,puzzle in enumerate(iterable=tqdm(puzzles)):
     # board_positions_val_dict = {}
     # print(chessboard.board)
 
-    eval,bestmove = alpha_beta_pruning(board,-1*10**3,10**3,depth,maxflag)   
+    eval,bestmove = alpha_beta_pruning(board,-1*10**5,10**5,depth,maxflag)   
  
     
     data[i]=time.time() - start_
