@@ -220,6 +220,9 @@ def alpha_beta_pruning(history_obj, alpha, beta, depth, max_player_flag):
             child=update_history(history_obj,action)
             
             
+            if child.can_claim_threefold_repetition():
+                continue
+            
             # childstr=child.fen().split()[0] 
             
             # if childstr in board_positions_val_dict:
@@ -248,6 +251,10 @@ def alpha_beta_pruning(history_obj, alpha, beta, depth, max_player_flag):
         minEval = math.inf
         for action in get_valid_actions(history_obj):
             child=update_history(history_obj,action)
+            
+            
+            if child.can_claim_threefold_repetition():
+                continue
             
             # childstr=child.fen().split()[0] 
             
