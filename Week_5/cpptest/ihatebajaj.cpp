@@ -4,9 +4,17 @@
 #include <bits/stdc++.h>
 #include <map>
 #include "chess.hpp" 
+#include <chrono>
+
+
 
 using namespace std;
 using namespace chess;
+using namespace std::chrono;
+
+
+Board globalboard;
+
 
 // Helper function to get the sign of a number
 int sgn(double x) {
@@ -276,22 +284,33 @@ double StaticValue(const Board& board) {
 
 
 // Alpha-beta pruning algorithm for move evaluation
-pair<double, Move> alpha_beta_pruning(const Board& board, double alpha, double beta, int depth, bool max_player_flag) {
+
+pair<double, Move> alpha_beta_pruning(const Board& board, double alpha, double beta, int depth, bool max_player_flag, map<uint64_t,double>& StaticMap) {
+
+    
     if (is_terminal_history(board)) {
-        // cout<<"Entered This"<<endl;
-        // cout<<board<<endl;
         return {get_utility_given_terminal_history(board), Move()};
     }
-    if (depth == 0) {
-        // cout<<"Entered Depth 0"<<endl;
-        // cout<<board<<endl;
-        return {StaticValue(board), Move()};
+    if (depth == 0) { 
+
+        uint64_t boardhash = board.hash();
+        
+        auto it = StaticMap.find(boardhash);
+        if (it != StaticMap.end()) {
+            return {it->second,Move()};
+        } 
+        else {
+            double ans = StaticValue(board);
+            StaticMap[boardhash] = ans;
+            return {ans,Move()};
     }
 
+
+
+    
+    }
     Move best_move;
     int firstmovecheck = 1;
-    
-//bye kunal
     if (max_player_flag) {
         double max_eval = -1000000;
         for (const Move& action : get_valid_actions(board)) {
@@ -300,14 +319,13 @@ pair<double, Move> alpha_beta_pruning(const Board& board, double alpha, double b
                 firstmovecheck=0;
             }
             Board child = update_history(board, action);
-            // cout<<"---------------------------------"<<endl;
-            // cout<<"Parent Move: "<<action<<endl;
-            double eval = alpha_beta_pruning(child, alpha, beta, depth - 1, false).first;
-            // cout<<"Parent Evaluation: "<<eval<<"   "<<"Move is: "<<action<<endl;
-            if (eval > max_eval) {
-                // cout<<"Best Move yet is: "<<endl;
-                // cout<<"Best Move is: "<<endl;
+            pair<GameResultReason, GameResult> result = child.isGameOver();
+            if (result.first == GameResultReason::THREEFOLD_REPETITION){
+                continue;
+            }
 
+            double eval = alpha_beta_pruning(child, alpha, beta, depth - 1, false,StaticMap).first;
+            if (eval > max_eval) {
                 best_move = action;
             }
             max_eval = max(max_eval, eval);
@@ -316,20 +334,22 @@ pair<double, Move> alpha_beta_pruning(const Board& board, double alpha, double b
                 break;
             }
         }
-        // cout<<"-----------------------"<<endl;
-        // cout<<"Evaluation is: "<<max_eval<<"    Best Move: "<<best_move<<endl;
-        // cout<<"-----------------------"<<endl;
         return {max_eval, best_move};
     } else {
         double min_eval = 1000000;
         for (const Move& action : get_valid_actions(board)) {
             Board child = update_history(board, action);
+
+            pair<GameResultReason, GameResult> result = child.isGameOver();
+            if (result.first == GameResultReason::THREEFOLD_REPETITION){
+                continue;
+            }
+
             if (firstmovecheck==1){
                 best_move = action;
                 firstmovecheck=0;
             }
-            double eval = alpha_beta_pruning(child, alpha, beta, depth - 1, true).first;
-            // cout<<"Evaluation: "<<eval<<"   "<<"Move is: "<<action<<endl;
+            double eval = alpha_beta_pruning(child, alpha, beta, depth - 1, true,StaticMap).first;
             if (eval < min_eval) {
                 best_move = action;
             }
@@ -339,12 +359,6 @@ pair<double, Move> alpha_beta_pruning(const Board& board, double alpha, double b
                 break;
             }
         }
-
-
-
-        // cout<<"-----------------------"<<endl;
-        // cout<<"Evaluation is: "<<min_eval<<"    Best Move: "<<best_move<<endl;
-        // cout<<"-----------------------"<<endl;
         return {min_eval, best_move};
     }
     return {-2, Move()};
@@ -352,37 +366,183 @@ pair<double, Move> alpha_beta_pruning(const Board& board, double alpha, double b
 
 
 
-int main(){
-
-    Board board =  Board("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-    // string pgnstring="";
-
-    while (!is_terminal_history(board)){
-   
-        pair<double, Move> plschalja = alpha_beta_pruning(board, -1*pow(10,5), pow(10,5), 5, true);
-        string san_move = uci::moveToSan(board, plschalja.second);
-        // cout<<"Eval is: "<<plschalja.first<<endl;
-        cout<<"Best Move is: "<<san_move<<endl;
-        board.makeMove(plschalja.second);
+// int main(){
+//     Board board =  Board("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+//     cout<<"My engine is playing white for now. You will have to use an external board to play the game (Sorry). My bot will tell you the move in Standard Notation. You have to enter the move in UCI Notation. i.e if your knight moves from c3 to c5 so you have to input c3c5. Write the movement of the king for a Castle Move. Thank you for playing!"<<endl;
+    
 
 
-        if (is_terminal_history(board)){
-            break;
+//     int initialDepth = 4;
+//     int maxDepth = 16;
+//     int depth = initialDepth;
+
+
+//     map<uint64_t,double> StaticMap;
+
+
+//     while (!is_terminal_history(board)) {
+//         cout<<"-------------------------------------------"<<endl;
+//         auto startTime = std::chrono::high_resolution_clock::now();
+//         pair<double, Move> bestMove;
+        
+//         // Perform iterative deepening with time constraint
+//         for (depth = initialDepth; depth <= maxDepth; ++depth) {
+//             bestMove = alpha_beta_pruning(board, -1e5, 1e5, depth, true, StaticMap);
+//             cout<<"Reached Depth: "<<depth<<endl;
+//             auto NowTime = std::chrono::high_resolution_clock::now();
+//             if ((std::chrono::duration_cast<milliseconds>(NowTime - startTime).count() >= 4000) || (bestMove.first==1e5)) {  
+//                 break;
+//             }
+//         }
+        
+//         string san_move = uci::moveToSan(board, bestMove.second);
+//         cout << "My Engine's Move is: " << san_move << endl;
+//         board.makeMove(bestMove.second);
+        
+//         if (is_terminal_history(board)) {
+//             break;
+//         }
+        
+//         string botmove;
+//         cout << "Enter Your move: ";
+//         cin >> botmove;
+        
+//         auto moves = get_valid_actions(board);
+//         while (find(moves.begin(), moves.end(), uci::uciToMove(board, botmove)) == moves.end()) {
+//             cout << "Invalid Move. Try again: ";
+//             cin >> botmove;
+//         }
+        
+//         Move Move_move = uci::uciToMove(board, botmove);
+//         board.makeMove(Move_move);
+        
+//     }
+    
+//     return 0;
+
+// }
+
+
+
+
+
+
+
+
+void sendResponse(const std::string& response) {
+    std::cout << response << std::endl;
+}
+
+void handleUci() {
+    sendResponse("id name YuvrajEngine_v1");
+    sendResponse("id author yuvigupta");
+    sendResponse("uciok");
+}
+
+void handleIsReady() {
+    sendResponse("readyok");
+}
+
+
+
+
+void setupInitialPosition() {
+    // Set up the initial position on the board
+    globalboard = Board();
+    // This function should initialize the board to the starting position
+}
+
+void setupPositionFromFEN(const std::string& fen) {
+    // Set up the board according to the given FEN string
+    globalboard = Board(fen);
+    // This function should parse the FEN string and set up the board accordingly
+}
+
+void makemove(const std::string& move) {
+    // Make a move on the board
+    Move Move_move = uci::uciToMove(globalboard, move);
+    globalboard.makeMove(Move_move);
+    // This function should convert the move string to your engine's move format and apply it
+}
+
+void handlePosition(const std::string& positionCommand) {
+    std::istringstream iss(positionCommand);
+    std::string token;
+    iss >> token; // "position"
+
+    std::string positionType;
+    iss >> positionType;
+
+    if (positionType == "startpos") {
+        // Set up initial position
+        setupInitialPosition();
+        iss >> token; // Check if there are more tokens, should be "moves" or end of string
+    } else if (positionType == "fen") {
+        // Read FEN string
+        std::string fen;
+        while (iss >> token && token != "moves") {
+            fen += token + " ";
         }
-
-        string botmove;
-        cout<<"Enter bot move: ";
-        cin >> botmove;
-            auto moves = get_valid_actions(board);
-            while (find(moves.begin(), moves.end(), uci::uciToMove(board, botmove)) == moves.end()) {
-                cout << "Invalid Move. Try again: ";
-                cin >> botmove;
-            }
-
-        Move Move_move = uci::uciToMove(board, botmove);
-
-        board.makeMove(Move_move);
-
+        setupPositionFromFEN(fen);
     }
 
+    // Handle moves if present
+    if (token == "moves") {
+        std::string move;
+        while (iss >> move) {
+            makemove(move);
+        }
+    }
+}
+
+void handleGo() {
+    // Make the engine start thinking and find the best move
+    int initialDepth = 4;
+    int maxDepth = 16;
+    int depth = initialDepth;
+    map<uint64_t,double> StaticMap;
+    auto startTime = std::chrono::high_resolution_clock::now();
+    pair<double, Move> bestMove;
+    bool whitemove;
+    if (current_player(globalboard)==1){whitemove=true;}
+    else{whitemove=false;}
+    // Perform iterative deepening with time constraint
+    for (depth = initialDepth; depth <= maxDepth; ++depth) {
+        bestMove = alpha_beta_pruning(globalboard, -1e5, 1e5, depth, whitemove, StaticMap);
+        // cout<<"Reached Depth: "<<depth<<endl;
+        auto NowTime = std::chrono::high_resolution_clock::now();
+        if ((std::chrono::duration_cast<milliseconds>(NowTime - startTime).count() >= 6000) || (bestMove.first==1e5)) {  
+            break;
+        }
+    }
+    
+    
+    string uci_move = uci::moveToUci(bestMove.second);
+    sendResponse("bestmove " + uci_move);
+
+}
+
+void handleQuit() {
+    // Clean up and exit
+    exit(0);
+}
+
+
+
+int main() {
+    std::string command;
+    while (std::getline(std::cin, command)) {
+        if (command == "uci") {
+            handleUci();
+        } else if (command == "isready") {
+            handleIsReady();
+        } else if (command.substr(0, 8) == "position") {
+            handlePosition(command);
+        } else if(command.substr(0, 2) == "go") {
+            handleGo();
+        } else if (command == "quit") {
+            handleQuit();
+        }
+    }
+    return 0;
 }
