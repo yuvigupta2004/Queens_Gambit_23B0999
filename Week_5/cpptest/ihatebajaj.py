@@ -283,7 +283,8 @@ def alpha_beta_pruning(history_obj, alpha, beta, depth, max_player_flag):
     return -2
     
 
-
+eval,bestmove= alpha_beta_pruning(chess.Board(),-100000,100000, 5, True)
+print(bestmove)
 
 
 
