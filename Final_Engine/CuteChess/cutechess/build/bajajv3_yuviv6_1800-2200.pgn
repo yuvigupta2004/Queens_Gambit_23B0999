@@ -1,0 +1,18 @@
+[Event "bajajv3_yuviv6_1800-2200"]
+[Site "?"]
+[Date "2024.07.12"]
+[Round "1"]
+[White "stockfish1900"]
+[Black "Bajaj_Engine_v3_10seconds"]
+[Result "1-0"]
+[ECO "A00"]
+[GameDuration "00:00:10"]
+[GameEndTime "2024-07-12T20:01:40.905 IST"]
+[GameStartTime "2024-07-12T20:01:30.895 IST"]
+[Opening "Van't Kruijs Opening"]
+[PlyCount "1"]
+[Termination "abandoned"]
+[TimeControl "10/move"]
+
+1. e3 {+0.29/22 10.0s, Black disconnects} 1-0
+

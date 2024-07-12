@@ -1,0 +1,22 @@
+{
+	"BUILD_DIR" : "/home/yuvigupta/Queens_Gambit/Week_5/cpptest/CuteChess/cutechess/build/lib_autogen",
+	"CMAKE_BINARY_DIR" : "/home/yuvigupta/Queens_Gambit/Week_5/cpptest/CuteChess/cutechess/build",
+	"CMAKE_CURRENT_BINARY_DIR" : "/home/yuvigupta/Queens_Gambit/Week_5/cpptest/CuteChess/cutechess/build",
+	"CMAKE_CURRENT_SOURCE_DIR" : "/home/yuvigupta/Queens_Gambit/Week_5/cpptest/CuteChess/cutechess",
+	"CMAKE_SOURCE_DIR" : "/home/yuvigupta/Queens_Gambit/Week_5/cpptest/CuteChess/cutechess",
+	"INCLUDE_DIR" : "/home/yuvigupta/Queens_Gambit/Week_5/cpptest/CuteChess/cutechess/build/lib_autogen/include",
+	"INPUTS" : 
+	[
+		"/home/yuvigupta/Queens_Gambit/Week_5/cpptest/CuteChess/cutechess/projects/lib/res/eco/eco.bin"
+	],
+	"LOCK_FILE" : "/home/yuvigupta/Queens_Gambit/Week_5/cpptest/CuteChess/cutechess/build/CMakeFiles/lib_autogen.dir/AutoRcc_eco_A4F4RKMHKD_Lock.lock",
+	"MULTI_CONFIG" : false,
+	"OPTIONS" : [ "-name", "eco" ],
+	"OUTPUT_CHECKSUM" : "A4F4RKMHKD",
+	"OUTPUT_NAME" : "qrc_eco.cpp",
+	"RCC_EXECUTABLE" : "/usr/lib/qt5/bin/rcc",
+	"RCC_LIST_OPTIONS" : [ "--list" ],
+	"SETTINGS_FILE" : "/home/yuvigupta/Queens_Gambit/Week_5/cpptest/CuteChess/cutechess/build/CMakeFiles/lib_autogen.dir/AutoRcc_eco_A4F4RKMHKD_Used.txt",
+	"SOURCE" : "/home/yuvigupta/Queens_Gambit/Week_5/cpptest/CuteChess/cutechess/projects/lib/res/eco/eco.qrc",
+	"VERBOSITY" : 0
+}

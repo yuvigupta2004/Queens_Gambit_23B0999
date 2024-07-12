@@ -1,0 +1,16 @@
+[Event "v4 vs v6"]
+[Site "?"]
+[Date "2024.07.11"]
+[Round "3"]
+[White "YuvrajEngine_v4"]
+[Black "YuvrajEngine_v6"]
+[Result "*"]
+[GameDuration "00:00:11"]
+[GameEndTime "2024-07-11T02:28:27.391 IST"]
+[GameStartTime "2024-07-11T02:28:15.676 IST"]
+[PlyCount "0"]
+[Termination "unterminated"]
+[TimeControl "30/move"]
+
+{No result} *
+
